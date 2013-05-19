@@ -96,7 +96,7 @@ Public Class TaskDataTool
 
             Dim myDsRow As DataRow
 
-            Dim info = "description, commiter, create_date, responsible, department, plan_finish_date, status, type, comment, update_date"
+            Dim info = "description, commiter, create_date, responsible, department, due_date, status, type, comment, update_date"
             If Not append Then
                 info = "id, " + info
             End If
@@ -114,7 +114,7 @@ Public Class TaskDataTool
                 task += "'" + myDsRow("create_date").ToString() + "',"
                 task += "'" + myDsRow("responsible").ToString() + "',"
                 task += "'" + myDsRow("department").ToString() + "',"
-                task += "'" + myDsRow("plan_finish_date").ToString() + "',"
+                task += "'" + myDsRow("due_date").ToString() + "',"
                 task += "'" + myDsRow("status").ToString() + "',"
                 task += "'" + myDsRow("type").ToString() + "',"
                 Dim comment As String = myDsRow("comment").ToString()
@@ -162,10 +162,10 @@ Public Class TaskDataTool
     Private Sub TaskDataTool_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.TB_Log.Text = "please set sheet name as 'Task', "
         Me.TB_Log.Text += "and first row is " + vbCrLf
-        Me.TB_Log.Text += "'id description commiter create_date responsible department plan_finish_date status type comment'" + vbCrLf
+        Me.TB_Log.Text += "'id description commiter create_date responsible department due_date status type comment'" + vbCrLf
 
-        Me.TB_excel.Text = "D:\proj\TastManagement\doc\TEST.xls"
-        Me.TB_db.Text = "D:\proj\TastManagement\TastManagement\App_Data\TaskManagement.mdf"
+        Me.TB_excel.Text = "D:\proj\TaskManagement\doc\TEST.xls"
+        Me.TB_db.Text = "D:\proj\TaskManagement\TaskManagement\App_Data\TaskManagement.mdf"
     End Sub
 
     Private Sub myLog(ByVal log As String)
