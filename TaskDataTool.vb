@@ -28,9 +28,11 @@ Public Class TaskDataTool
 
         Dim excel_file As String = Me.TB_excel.Text
         Dim db_file As String = Me.TB_db.Text
+        Dim db_pre As String = Me.TB_dbpre.Text
+        Dim db_post As String = Me.TB_dbpost.Text
 
         Dim dataset = getDataFromExcel(excel_file)
-        setDataToDB(db_file, dataset)
+        setDataToDB(db_pre, db_file, db_post, dataset)
 
     End Sub
 
@@ -71,9 +73,9 @@ Public Class TaskDataTool
 
     End Function
 
-    Public Sub setDataToDB(ByVal filename As String, ByRef myDs As DataSet)
+    Public Sub setDataToDB(ByVal dbpre As String, ByVal filename As String, ByVal dbpost As String, ByRef myDs As DataSet)
 
-        Dim strConn As String = "Data Source=.\SQLEXPRESS;AttachDbFilename=" + filename + ";Integrated Security=True;User Instance=True"
+        Dim strConn As String = dbpre + filename + dbpost
 
         Dim task As String
 
@@ -166,6 +168,10 @@ Public Class TaskDataTool
 
         Me.TB_excel.Text = "D:\proj\TaskManagement\doc\TEST.xls"
         Me.TB_db.Text = "D:\proj\TaskManagement\TaskManagement\App_Data\TaskManagement.mdf"
+
+        Me.TB_dbpre.Text = "Data Source=.\SQLEXPRESS;AttachDbFilename="
+        Me.TB_dbpost.Text = ";Integrated Security=True;User Instance=True"
+
     End Sub
 
     Private Sub myLog(ByVal log As String)

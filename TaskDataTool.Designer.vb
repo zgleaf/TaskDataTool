@@ -33,6 +33,8 @@ Partial Class TaskDataTool
         Me.Btn_export = New System.Windows.Forms.Button
         Me.OpenFileDialog1 = New System.Windows.Forms.OpenFileDialog
         Me.TB_Log = New System.Windows.Forms.TextBox
+        Me.TB_dbpre = New System.Windows.Forms.TextBox
+        Me.TB_dbpost = New System.Windows.Forms.TextBox
         Me.SuspendLayout()
         '
         'Btn_excel
@@ -88,7 +90,7 @@ Partial Class TaskDataTool
         'CB_append
         '
         Me.CB_append.AutoSize = True
-        Me.CB_append.Location = New System.Drawing.Point(65, 103)
+        Me.CB_append.Location = New System.Drawing.Point(65, 114)
         Me.CB_append.Name = "CB_append"
         Me.CB_append.Size = New System.Drawing.Size(60, 16)
         Me.CB_append.TabIndex = 6
@@ -131,11 +133,27 @@ Partial Class TaskDataTool
         Me.TB_Log.TabIndex = 10
         Me.TB_Log.TabStop = False
         '
+        'TB_dbpre
+        '
+        Me.TB_dbpre.Location = New System.Drawing.Point(65, 87)
+        Me.TB_dbpre.Name = "TB_dbpre"
+        Me.TB_dbpre.Size = New System.Drawing.Size(234, 21)
+        Me.TB_dbpre.TabIndex = 11
+        '
+        'TB_dbpost
+        '
+        Me.TB_dbpost.Location = New System.Drawing.Point(306, 87)
+        Me.TB_dbpost.Name = "TB_dbpost"
+        Me.TB_dbpost.Size = New System.Drawing.Size(252, 21)
+        Me.TB_dbpost.TabIndex = 12
+        '
         'TaskDataTool
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(665, 310)
+        Me.Controls.Add(Me.TB_dbpost)
+        Me.Controls.Add(Me.TB_dbpre)
         Me.Controls.Add(Me.TB_Log)
         Me.Controls.Add(Me.Btn_export)
         Me.Controls.Add(Me.Btn_import)
@@ -166,5 +184,7 @@ Partial Class TaskDataTool
     Friend WithEvents Btn_export As System.Windows.Forms.Button
     Friend WithEvents OpenFileDialog1 As System.Windows.Forms.OpenFileDialog
     Friend WithEvents TB_Log As System.Windows.Forms.TextBox
+    Friend WithEvents TB_dbpre As System.Windows.Forms.TextBox
+    Friend WithEvents TB_dbpost As System.Windows.Forms.TextBox
 
 End Class
