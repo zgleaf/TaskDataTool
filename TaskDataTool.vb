@@ -1,4 +1,5 @@
 Imports System.Data.OleDb
+Imports Microsoft.Office.Interop
 
 Public Class TaskDataTool
 
@@ -31,13 +32,27 @@ Public Class TaskDataTool
         Dim db_pre As String = Me.TB_dbpre.Text
         Dim db_post As String = Me.TB_dbpost.Text
 
+        myLog("start import...")
         Dim dataset = getDataFromExcel(excel_file)
         setDataToDB(db_pre, db_file, db_post, dataset)
 
     End Sub
 
     Private Sub Btn_export_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Btn_export.Click
-        myLog("not supported yet.")
+        'myLog("not supported yet.")
+        If TB_excel.Text = "" Or TB_db.Text = "" Then
+            myLog("please select excel file and db file.")
+            Return
+        End If
+
+        Dim excel_file As String = Me.TB_excel.Text
+        Dim db_file As String = Me.TB_db.Text
+        Dim db_pre As String = Me.TB_dbpre.Text
+        Dim db_post As String = Me.TB_dbpost.Text
+
+        Dim dataset = getDataFromDB(db_pre, db_file, db_post)
+        setDataToExcel(excel_file, dataset)
+
     End Sub
 
     Public Function getDataFromExcel(ByVal filename As String) As DataSet
@@ -73,7 +88,44 @@ Public Class TaskDataTool
 
     End Function
 
-    Public Sub setDataToDB(ByVal dbpre As String, ByVal filename As String, ByVal dbpost As String, ByRef myDs As DataSet)
+
+    Public Sub setDataToExcel(ByVal filename As String, ByVal myDs As DataSet)
+
+        Try
+            Dim oExcel As New Excel.Application
+            Dim oBook As Excel.Workbook
+            Dim oSheet As Excel.Worksheet
+
+            oBook = oExcel.Workbooks.Open(filename)
+            oSheet = oBook.Worksheets().Add
+            oSheet.Name = "Task_" + Now.Month.ToString() + "_" + Now.Day.ToString() + "_" + Now.Hour.ToString() + "_" + Now.Minute.ToString()
+
+            myLog("Set sheet1 as " + oSheet.Name + " ok.")
+
+            Dim myTable As Data.DataTable = myDs.Tables(0)
+            For col As Integer = 0 To myTable.Columns.Count - 1
+                oSheet.Cells(1, col + 1) = myTable.Columns(col).Caption
+            Next
+            myLog("Set caption ok.")
+
+            For row As Integer = 0 To myTable.Rows.Count - 1
+                For col As Integer = 0 To myTable.Columns.Count - 1
+                    oSheet.Cells(row + 2, col + 1) = myTable.Rows(row)(col).ToString()
+                Next
+                myLog("export tem " + row.ToString + " ok.")
+            Next
+            oBook.Save()
+            myLog("Save file ok.")
+            oExcel.Quit()
+            myLog("Excel quit ok.")
+
+        Catch ex As Exception
+            myLog(ex.Message.ToString)
+        End Try
+
+    End Sub
+
+    Public Sub setDataToDB(ByVal dbpre As String, ByVal filename As String, ByVal dbpost As String, ByVal myDs As DataSet)
 
         Dim strConn As String = dbpre + filename + dbpost
 
@@ -161,16 +213,44 @@ Public Class TaskDataTool
 
     End Sub
 
+    Public Function getDataFromDB(ByVal dbpre As String, ByVal filename As String, ByVal dbpost As String) As DataSet
+
+        Dim strConn As String = dbpre + filename + dbpost
+
+        Dim myDs As New System.Data.DataSet
+
+        Try
+            Dim connect As SqlClient.SqlConnection = New SqlClient.SqlConnection(strConn)
+            connect.Open()
+            Dim cmd As New SqlClient.SqlCommand("SELECT * FROM [Task]", connect)
+            Dim dataAdapter As New SqlClient.SqlDataAdapter(cmd)
+            dataAdapter.Fill(myDs)
+
+            connect.Close()
+
+        Catch ex As Exception
+            myLog(ex.Message.ToString)
+        End Try
+
+        Return myDs
+
+    End Function
+
     Private Sub TaskDataTool_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Me.TB_Log.Text = "please set sheet name as 'Task', "
         Me.TB_Log.Text += "and first row is " + vbCrLf
         Me.TB_Log.Text += "'id description commiter create_date responsible department due_date status type comment'" + vbCrLf
 
-        Me.TB_excel.Text = "D:\proj\TaskManagement\doc\TEST.xls"
-        Me.TB_db.Text = "D:\proj\TaskManagement\TaskManagement\App_Data\TaskManagement.mdf"
+        Me.TB_excel.Text = "C:\Users\a3bh0zz\Documents\2.Project\Daily Task Management System in MRD\TaskDataTool\TEST.xls"
+        Me.TB_db.Text = "D:\PROJ\TASKMANAGEMENT\TASKMANAGEMENT\APP_DATA\TASKMANAGEMENT.MDF"
+        Me.TB_dbpre.Text = "Data Source=CNWSP3BH0ZZ;Initial Catalog="
+        Me.TB_dbpost.Text = ";Persist Security Info=True;User ID=sa;Password=Jq609007;"
 
-        Me.TB_dbpre.Text = "Data Source=.\SQLEXPRESS;AttachDbFilename="
-        Me.TB_dbpost.Text = ";Integrated Security=True;User Instance=True"
+        'Me.TB_excel.Text = "D:\proj\TaskManagement\doc\TEST.xls"
+        'Me.TB_db.Text = "D:\proj\TaskManagement\TaskManagement\App_Data\TaskManagement.mdf"
+
+        'Me.TB_dbpre.Text = "Data Source=.\SQLEXPRESS;AttachDbFilename="
+        'Me.TB_dbpost.Text = ";Integrated Security=True;User Instance=True"
 
     End Sub
 
